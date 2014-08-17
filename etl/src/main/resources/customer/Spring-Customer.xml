@@ -1,0 +1,23 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+
+	<bean id="orderDAO" class="com.mvdb.etl.dao.impl.JdbcOrderDAO">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+    <bean id="orderLineItemDAO" class="com.mvdb.etl.dao.impl.JdbcOrderLineItemDAO">
+        <property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="configurationDAO" class="com.mvdb.etl.dao.impl.JdbcConfigurationDAO">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="genericDAO" class="com.mvdb.etl.dao.impl.JdbcGenericDAO">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+</beans>

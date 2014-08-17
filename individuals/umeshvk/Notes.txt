@@ -1,0 +1,8 @@
+1. Create a Binary Store for storing record. 
+   Every record can contain multiple versions
+2. Create a Binary Store for storing schema
+3. Create the ability to diff the last version with the latest version. 
+   Replace the last version with the diff and append the full columnset 
+   of the latest version at the end of version list. 
+4. Stream the file for binary store thru a MR-Pig infrastructure and reconstruct the first version of each record and then output it to a new table. 
+5. Write a unit test that vcan verify that this works correctly. Add the test to a test suite. 

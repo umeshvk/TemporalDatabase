@@ -1,0 +1,7 @@
+add jar /home/umesh/work/BigData/etl/etl/target/etl-0.0.1.jar; 
+add jar /home/umesh/work/BigData/mvdb/target/mvdb-0.0.1.jar;
+add jar /home/umesh/ops/hive-0.11.0-bin/lib/hive-contrib-0.11.0.jar;
+
+set sliceDate=2005-01-19 00:00:00;
+set hive.cli.print.header=true;
+select * from test_table;

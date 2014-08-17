@@ -1,0 +1,155 @@
+Step 1: 
+=======
+cat /etc/postgresql/9.1/main/postgresql.conf | grep -e listen -e standard_conforming_strings
+If necessar chage setting to match:
+listen_addresses = '*'
+standard_conforming_strings = off
+
+
+Step 2:
+=======
+You also need to configure authentication for your network in pg_hba.conf. You need to make sure that the PostgreSQL user that you will create in the next step will have access to the server from a remote host. To do this, add a new line into pg_hba.con that has the following information:
+
+host    <database>         <user>         <network address>         <mask>               password
+
+The following example to allows all users connect from all hosts to all your databases:
+
+host    all         all         0.0.0.0         0.0.0.0               password
+
+  Note:
+
+This configuration is applicable only for a network listener. Using this configuration won't open all your databases to the entire world; the user must still supply a password to authenticate himself, and privilege restrictions configured in PostgreSQL will still be applied.
+
+
+Step 3:
+=======
+After completing the installation and configuration, you can start the database server:
+
+Start PostgreSQL Server
+
+$ sudo /etc/init.d/postgresql restart
+
+Step 4:
+========
+
+Use chkconfig utility to ensure that your PostgreSQL server will start at a boot time. For example:
+
+chkconfig postgresql on
+
+You can use the chkconfig utility to verify that PostgreSQL server will be started at boot time, for example:
+
+chkconfig --list postgresql
+
+Step 2: Install the Postgres JDBC Driver
+
+Before you can run the Hive metastore with a remote PostgreSQL database, you must configure a JDBC driver to the remote PostgreSQL database, set up the initial database schema, and configure the PostgreSQL user account for the Hive user.
+
+To install the PostgreSQL JDBC Driver on a Red Hat 6 system:
+
+Install postgresql-jdbc package and create symbolic link to the /usr/lib/hive/lib/ directory. For example:
+
+$ sudo yum install postgresql-jdbc
+$ ln -s /usr/share/java/postgresql-jdbc.jar /usr/lib/hive/lib/postgresql-jdbc.jar
+
+To install the PostgreSQL connector on a Red Hat 5 system:
+
+You need to manually download the PostgreSQL connector from http://jdbc.postgresql.org/download.html and move it to the /usr/lib/hive/lib/ directory. For example:
+
+$ wget http://jdbc.postgresql.org/download/postgresql-9.2-1002.jdbc4.jar
+$ mv postgresql-9.2-1002.jdbc4.jar /usr/lib/hive/lib/
+
+  Note:
+
+You may need to use a different version if you have a different version of Postgres. You can check the version as follows:
+
+$ sudo rpm -qa | grep postgres
+
+To install the PostgreSQL JDBC Driver on a SLES system:
+
+Install postgresql-jdbc and symbolically link the file into the /usr/lib/hive/lib/ directory.
+
+$ sudo zypper install postgresql-jdbc
+$ ln -s /usr/share/java/postgresql-jdbc.jar /usr/lib/hive/lib/postgresql-jdbc.jar
+
+To install the PostgreSQL JDBC Driver on a Debian/Ubuntu system:
+
+Install libpostgresql-jdbc-java and symbolically link the file into the /usr/lib/hive/lib/ directory.
+
+$ sudo apt-get install libpostgresql-jdbc-java
+$ ln -s /usr/share/java/postgresql-jdbc4.jar /usr/lib/hive/lib/postgresql-jdbc4.jar
+
+Step 3: Create the metastore database and user account
+
+Proceed as in the following example:
+
+bash# sudo -u  postgres psql
+bash$ psql
+postgres=# CREATE USER hiveuser WITH PASSWORD 'mypassword';
+postgres=# CREATE DATABASE metastore;
+postgres=# \c metastore;
+You are now connected to database 'metastore'.
+postgres=# \i /usr/lib/hive/scripts/metastore/upgrade/postgres/hive-schema-0.10.0.postgres.sql
+SET
+SET
+...
+
+Now you need to grant permission for all metastore tables to user hiveuser. PostgreSQL does not have statements to grant the permissions for all tables at once; you'll need to grant the permissions one table at a time. You could automate the task with the following SQL script:
+
+bash# sudo -u  postgres psql
+metastore=#         \o /tmp/grant-privs
+metastore=#         SELECT 'GRANT SELECT,INSERT,UPDATE,DELETE ON "'  || schemaname || '"."' || tablename || '" TO hiveuser ;'
+metastore-#           FROM pg_tables
+metastore-#           WHERE tableowner = CURRENT_USER and schemaname = 'public';
+metastore=#         \o
+metastore=#         \i /tmp/grant-privs
+
+You can verify the connection from the machine where you'll be running the metastore service as follows:
+
+psql -h  myhost -U hiveuser -d  metastore
+metastore=#
+
+Step 4: Configure the Metastore Service to Communicate with the PostgreSQL Database
+
+This step shows the configuration properties you need to set in hive-site.xml to configure the metastore service to communicate with the PostgreSQL database. Though you can use the same hive-site.xml on all hosts (client, metastore, HiveServer), hive.metastore.uris is the only property that must be configured on all of them; the others are used only on the metastore host.
+
+Given a PostgreSQL database running on host myhost under the user account hive with the password mypassword, you would set configuration properties as follows.
+  Note:
+
+    The instructions in this section assume you are using Remote mode, and that the PostgreSQL database is installed on a separate host from the metastore server.
+
+    The hive.metastore.local property is no longer supported as of Hive 0.10; setting hive.metastore.uris is sufficient to indicate that you are using a remote metastore.
+
+<property>
+  <name>javax.jdo.option.ConnectionURL</name>
+  <value>jdbc:postgresql://myhost/metastore</value>
+</property>
+ 
+<property>
+  <name>javax.jdo.option.ConnectionDriverName</name>
+  <value>org.postgresql.Driver</value>
+</property>
+ 
+<property>
+  <name>javax.jdo.option.ConnectionUserName</name>
+  <value>hiveuser</value>
+</property>
+ 
+<property>
+  <name>javax.jdo.option.ConnectionPassword</name>
+  <value>mypassword</value>
+</property>
+ 
+<property>
+  <name>datanucleus.autoCreateSchema</name>
+  <value>false</value>
+</property>
+
+<property>
+  <name>hive.metastore.uris</name>
+  <value>thrift://<n.n.n.n>:9083</value>
+  <description>IP address (or fully-qualified domain name) and port of the metastore host</description>
+</property>
+
+Step 6: Test connectivity to the metastore:
+
+$ hive -e  "show tables;"

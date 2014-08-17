@@ -1,0 +1,17 @@
+CREATE DATABASE IF NOT EXISTS mv1;
+CREATE DATABASE IF NOT EXISTS mv2;
+
+add jar /home/umesh/work/BigData/etl/etl/target/etl-0.0.1.jar; 
+add jar /home/umesh/work/BigData/mvdb/target/mvdb-0.0.1.jar;
+add jar /home/umesh/ops/hive-0.11.0-bin/lib/hive-contrib-0.11.0.jar;
+
+drop table orders;
+drop table orderlineitem;
+
+create table orders(mvdb_id string, sale_code int, note string, create_time string, update_time string) row format serde 'com.mvdb.platform.action.TimeSliceSerde' stored as sequencefile location '/tmp/test_table';
+LOAD DATA INPATH '/tmp/theData.dat'  OVERWRITE INTO TABLE test_table;
+--select count(*) from test_table;
+--set sliceDate=2003-01-19 00:00:00;
+set hive.cli.print.header=true;
+--select * from test_table;
+select * from test_table where mvdb_id ='0000000000000007';

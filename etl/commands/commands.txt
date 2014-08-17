@@ -1,0 +1,6 @@
+1. mvn clean 
+2. mvn compile
+3. Install to the local maven repository:
+mvn install: Install to the local maven repository
+4. Install binary and source to the local maven repository: 
+mvn install:install-file -Dfile=etl-1.0-SNAPSHOT.jar  -DpomFile=pom.xml -Dsources=etl-1.0-SNAPSHOT-sources.jar

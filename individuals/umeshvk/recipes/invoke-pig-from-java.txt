@@ -1,0 +1,12 @@
+You can use org.apache.pig.PigServer to run pig scripts from Java programs.
+
+PigServer pigServer = new PigServer(ExecType.MAPREDUCE);
+pigServer.registerScript("scripts/test.pig");
+Requires 'pig.properties' on classpath.
+
+fs.default.name=hdfs://: mapred.job.tracker=: Or pass an instance of java.util.Properties to PigServer constructor.
+
+Properties props = new Properties();
+props.setProperty("fs.default.name", "hdfs://<namenode-hostname>:<port>");
+props.setProperty("mapred.job.tracker", "<jobtracker-hostname>:<port>");
+PigServer pigServer = new PigServer(ExecType.MAPREDUCE, props);

@@ -1,0 +1,25 @@
+>mvn eclipse:clean
+>>This command will remove the eclipse related files like .classpath and .project and enable the next command to create them anew.
+
+>mvn eclipse:eclipse -DdownloadSources=true -DdownloadJavadocs=true
+>>Create an eclipse project from a maven project
+
+>To run a single test in maven, set the test property: mvn -Dtest=TestIdentityUDF test
+>>where TestIdentityUDF appears to be the name of class w/o the package name to test. 
+
+>export HADOOP_OPTS="-Djava.security.krb5.realm= -Djava.security.krb5.kdc="
+>>Hadoop logs errors upon startup on OS X 10.7
+When starting Hadoop on OS X 10.7 ("Lion") using start-all.sh, Hadoop logs the following errors:
+2011-07-28 11:45:31.469 java[77427:1a03] Unable to load realm info from SCDynamicStore
+Hadoop does seem to function properly despite this.
+Matthew Buckett added a comment - 02/Oct/11 22:29
+I think the OS X JDK is trying to get some information from configd which is failing that causes the whole LoginContent to break.
+This can be worked around by specifying kerberos config on the command line:
+-Djava.security.krb5.realm=OX.AC.UK -Djava.security.krb5.kdc=kdc0.ox.ac.uk:kdc1.ox.ac.uk
+For a standalone machine, you can just set the values to nothing.
+Adding the following to your environment or hadoop-env.sh should suppress the errors:
+export HADOOP_OPTS="-Djava.security.krb5.realm= -Djava.security.krb5.kdc="
+
+>mvn exec:java -Dexec.mainClass=com.mvdb.platform.App
+>>How to run java application using maven
+

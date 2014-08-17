@@ -1,0 +1,9 @@
+Execute on command line: 
+hadoop fs -copyFromLocal /tmp/seq.dat /tmp
+Execute in hive: 
+add jar /home/umesh/work/BigData/etl/etl/target/etl-0.0.1.jar; 
+add jar /home/umesh/work/BigData/mvdb/target/mvdb-0.0.1.jar;
+add jar /home/umesh/ops/hive-0.11.0-bin/lib/hive-contrib-0.11.0.jar;
+drop table table3;
+create table table3( a int, b int) row format serde 'com.mvdb.platform.scratch.action.MySerde' stored as sequencefile location '/tmp/table3';
+LOAD DATA INPATH '/tmp/seq.dat'  OVERWRITE INTO TABLE table3;

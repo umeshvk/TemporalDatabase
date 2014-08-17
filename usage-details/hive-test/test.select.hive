@@ -1,0 +1,6 @@
+add jar /home/umesh/work/BigData/etl/etl/target/etl-0.0.1.jar; 
+add jar /home/umesh/work/BigData/mvdb/target/mvdb-0.0.1.jar;
+add jar /home/umesh/ops/hive-0.11.0-bin/lib/hive-contrib-0.11.0.jar;
+--select * from test_table;
+select * from test_table where mvdb_id ='0000000000000007';
+

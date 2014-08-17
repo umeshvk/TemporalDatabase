@@ -1,0 +1,36 @@
+1.(Done) 
+Implement the delete functionality. 
+
+2.(Done)
+test merge flow.
+Add these three steps to the mertge flow:
+delete passive mvdb folder
+rename merged-tmp-folder to be the new passive mvdb folder
+swap passive and active mvdb folder
+
+3.(Done)
+Scan all the versions for all the records of all the tables using Scanner. 
+
+4.(Done)
+Create a Time slice. 
+Scan the time slice. 
+Compare visually the scan of time slice to the scan of multi version record to see if the slice captures records and reflects the correct data.
+
+5.(Aug 8)
+Run queries on slice. 
+Write Hive JDBC Client.
+Automate table creation based on struct_tablename.dat file
+
+6.(Aug 9,10,11)
+Store a new schema if there are changes from previous schema. 
+Be able select effective schema for a specific time. 
+In creating a slice evaluate use of the schema to create columns with the correct type. 
+Try using hive on this slice. 
+
+7. 
+Simulator scripting.
+
+8.
+Use MongoDB to cache the query results. 
+Or Use Hbase to so cache the query results. 
+

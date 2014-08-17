@@ -1,0 +1,2 @@
+Find hardware specs:
+sudo lshw -html > ~/hardware_info.html && firefox ~/hardware_info.html
