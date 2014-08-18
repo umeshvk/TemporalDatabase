@@ -1,3 +1,1 @@
-> init.sh
-
-This will create a file ~/.mvdb/etl.init.properties
+For now see the README.md at the root of project
