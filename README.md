@@ -22,10 +22,9 @@ data in the Temporal Database.
 How to test this project?
 -------------------------
 
-Navigate to the usage-details  directory
-ls z*sh
-This will give a list of three shell scripts
-They will point to other shell scripts. 
+1. Navigate to the usage-details  directory
+2. ls z*sh
+3. This will give a list of three shell scripts. They will point to other shell scripts. 
 
 Can you provide an overview of the code(a high level walk thru)?
 ---------------------------------------------------------------
