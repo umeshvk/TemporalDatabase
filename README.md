@@ -29,7 +29,7 @@ They will point to other shell scripts.
 
 Can you provide an overview of the code(a high level walk thru)?
 ---------------------------------------------------------------
-Yes I will be doing that this week or next. I may have a chance to do a presentationat work in which case I may put up a video. But this is currently low priority.
+Yes I will be doing that this week or next. I may have a chance to do a presentation at work in which case I may put up a video. But this is currently low priority.
 Here is the idea in brief: 
 
 1. Simulate customer relational database instance in Postgres.(It could have been any RDBMS)
